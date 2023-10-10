@@ -1,22 +1,23 @@
 package ie.atu.week3;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
 public class IoC {
-    private UserService us;
 
-    public IoC(){
-        us = new UserService();
+    private final AcknowledgeService acknowledgeService;
+
+    @Autowired
+    public IoC(AcknowledgeService acknowledgeService){
+        this.acknowledgeService = acknowledgeService;
     }
-
-    @GetMapping("newUser1/{name}/{email}")
-    public String getUser(@PathVariable String name, @PathVariable String email){
-        us.registerUser(name, email);
-        return "Without IOC";
+    @PostMapping("/confirm-and-register")
+    public String confirmAndRegister(@RequestBody UserDetails userDetails){
+        return acknowledgeService.ackMessage(userDetails);
     }
 
 }
